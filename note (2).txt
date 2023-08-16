@@ -1,0 +1,200 @@
+1. install
+ npm install -g @angular/cli
+
+2.  set somestuff up
+    Set-ExecutionPolicy -Scope CurrentUser -ExecutionPolicy Remo
+
+    the above happen once during install and not there after
+
+3. create new app
+    ng new my-app
+
+4.
+    google stuff :not
+    routing :yes
+    stylesheet: css
+
+    //wait for packages to install
+
+5.  move to the project directory you just created
+    cd <project_name>
+
+6.  run
+    ng serve
+
+    //view created project
+
+7. Installing default testing tools
+    npm uninstall @types/jasmine jasmine-core karma-chrome-launcher
+
+8. Inside angular.json scroll to view "test:" section
+    delete the test object about karma
+
+9. install Jest
+    npm i jest @types/jest jest-preset-angular
+
+10. inside src create file "setup.jest.ts"
+
+11. inside the above file 
+    " 'import 'jest-preset-angular/setup-jest'"
+
+12. in tsconfig.spec.json
+        remove jasmin from types and put
+
+            /* To learn more about this file see: https://angular.io/config/tsconfig. */
+            {
+            "extends": "./tsconfig.json",
+            "compilerOptions": {
+                "outDir": "./out-tsc/spec",
+                "types": [
+                "jest",
+                "node"
+                ]
+            },
+            "include": [
+                "src/setup.jest.ts",
+                "src/**/*.d.ts"
+            ]
+            }
+
+13. in the package.json 
+        after the devDependencies object add jest object with preset,
+         setupFilesAfterEnv and then again add testpathIgnorePatterns
+
+         Also  ignore the node_modules and dist folder after you do ng build
+
+            after athe abouve you will have
+
+            
+                "jest":{
+                    "preset":"jest-preset-angular",
+                    "setupFilesAfterEnv":[
+                    "<rootDir>/src/setup.jest.ts"
+                    ],
+                    "testPathIgnorePatterns":[
+                    "<root>/node_modules",
+                    "<root>/Dist"
+                    ],
+                    "globals":{
+                    "ts-jest":{
+                        "tsConfig":"<rootDir>/tsConfig.spec.json",
+                        "stringifyContentPathRegex":"\\.html$"
+                    }
+                    }
+                }
+
+14. run ng build
+    ng build
+
+15. inside package.json scripts ---- for test use "jest", add "jest --watch" and "jest --coverage"
+
+    whole scripts will look like: ==>>>
+
+        "scripts": {
+            "ng": "ng",
+            "start": "ng serve",
+            "build": "ng build",
+            "watch": "ng build --watch --configuration development",
+            "test": "jest",
+            "test:watch": "jest --watch",
+            "test:coverage": "jest --coverage"
+         }
+
+16. now generate a new component
+    ng g c first-test
+
+17 . 
+
+    ng generate component home
+
+    ng generate component login
+
+    ng generate component register
+    
+    ng generate component navbar
+
+
+17.part2  :) in app.module.ts add ReactiveFormsModule inside  imports.. it looks like this after adding
+
+        imports: [
+        BrowserModule,
+        AppRoutingModule,
+        ReactiveFormsModule
+        ],
+
+
+
+18. In app.routing.module.ts inside routes list add
+
+    const routes: Routes = [
+        {path:"", component:HomeComponent},
+        {path:"login", component:LoginComponent},
+        {path:"register", component:RegisterComponent},
+        ];
+
+19. in app.component.html add
+
+    <router-outlet></router-outlet>
+
+20. write code in the components html and css and also the styles.css
+
+
+21. inside login.components.ts add implements OnInit and ngOnInit and also import OnInit...
+    add form with FormGroup 
+
+    a constructor and login function which youll implement in login.component.html 
+
+
+    {the whole file looks like that after modifying} --- login.component.ts
+
+        import { Component, OnInit } from '@angular/core';
+        import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+
+        @Component({
+        selector: 'app-login',
+        templateUrl: './login.component.html',
+        styleUrls: ['./login.component.css']
+        })
+        export class LoginComponent implements OnInit{
+        form!: FormGroup
+
+        constructor(private fb: FormBuilder){}
+
+        ngOnInit():void{
+        this.form = this.fb.group({
+            email: [null,[Validators.required]],
+            password: [null,[Validators.required]],
+        })
+        }
+
+        login(){
+        console.log(this.form.value);
+        
+        }
+        }
+
+
+22. Inside the login.component.html add [formGroup]='form' to the
+    form line specifically and add the formcontrolnames to the input fields 
+    and also the (ngSubmit with the login function to the form) just like the whole form below...
+
+
+    <app-navbar></app-navbar>
+
+        <div class="main">
+            <form action=""  [formGroup]="form" class="loginform" (ngSubmit)="login()">
+                <div class="inputs">
+                    <label for="">Email</label> <br>
+                    <input type="email" name="email" id="useremail" formControlName="email">
+                </div>
+                <div class="inputs">
+                    <label for="">Password</label> <br>
+                    <input type="password" name="pwd" id="userpwd" formControlName="password">
+                </div>
+                <div class="submitbtn">
+                    <input type="submit" value="Login">
+                </div>
+            </form>
+        </div>
+
+
